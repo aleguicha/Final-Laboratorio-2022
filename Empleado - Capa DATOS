@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace CapaDatos
+{
+    public class CD_Empleados
+    {
+        private CD_Conexion conexion = new CD_Conexion();
+
+        SqlDataReader leer;
+        DataTable tabla = new DataTable();
+        SqlCommand comando = new SqlCommand();
+        private object idEmpleado;
+
+        public DataTable Mostrar()
+        {
+
+            //Procedimeintos Almacenados
+            comando.Connection = conexion.AbrirConexion();
+            comando.CommandText = "spmostrarEmpleado";
+            comando.CommandType = CommandType.StoredProcedure;
+            leer = comando.ExecuteReader();
+            tabla.Load(leer);
+            conexion.CerrarConexion();
+            return tabla;
+
+        }
+
+        public void Insertar(string nombre, string apellido, int legajo, string cargo, string telefono, string acceso, string usuario, string password, string email)
+        {
+
+            //Procedimeintos Almacenados
+            comando.Connection = conexion.AbrirConexion();
+            comando.CommandText = "spinsertarEmpleado";
+            comando.CommandType = CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@nombre", nombre);
+            comando.Parameters.AddWithValue("@apellido", apellido);
+            comando.Parameters.AddWithValue("@legajo", legajo);
+            comando.Parameters.AddWithValue("@cargo", cargo);
+            comando.Parameters.AddWithValue("@telefono", telefono);
+            comando.Parameters.AddWithValue("@acceso", acceso);
+            comando.Parameters.AddWithValue("@usuario", usuario);
+            comando.Parameters.AddWithValue("@password", password);
+            comando.Parameters.AddWithValue("@email", email);
+
+            comando.ExecuteNonQuery();
+
+            comando.Parameters.Clear();
+
+        }
+
+        public void Editar(int idEmpleado, string nombre, string apellido, int legajo, string cargo, string telefono, string acceso, string usuario, string password, string email)
+        {
+            comando.Connection = conexion.AbrirConexion();
+            comando.CommandText = "speditarEmpleado";
+            comando.CommandType = CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@idEmpleado", idEmpleado);
+            comando.Parameters.AddWithValue("@nombre", nombre);
+            comando.Parameters.AddWithValue("@apellido", apellido);
+            comando.Parameters.AddWithValue("@legajo", legajo);
+            comando.Parameters.AddWithValue("@cargo", cargo);
+            comando.Parameters.AddWithValue("@telefono", telefono);
+            comando.Parameters.AddWithValue("@acceso", acceso);
+            comando.Parameters.AddWithValue("@usuario", usuario);
+            comando.Parameters.AddWithValue("@password", password);
+            comando.Parameters.AddWithValue("@email", email);
+
+            comando.ExecuteNonQuery();
+
+            comando.Parameters.Clear();
+        }
+
+        public void Eliminar(int idEmpleado)
+        {
+            comando.Connection = conexion.AbrirConexion();
+            comando.CommandText = "speliminarEmpleado";
+            comando.CommandType = CommandType.StoredProcedure;
+
+            comando.Parameters.AddWithValue("@idEmpleado", idEmpleado);
+
+            comando.ExecuteNonQuery();
+
+            comando.Parameters.Clear();
+
+        }   
+         
+    }
+}
+
