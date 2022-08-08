@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using CapaNegocio;
+
+namespace CapaDePresentacion
+{
+    public partial class Form1 : Form
+    {
+        CN_Empleados objetoCN = new CN_Empleados();
+        private string idEmpleado = null;
+        private bool Editar = false;
+
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            MostrarEmpleados();
+        }
+
+        private void MostrarEmpleados()
+        {
+            CN_Empleados objeto = new CN_Empleados();
+            dataGridView1.DataSource = objeto.MostrarEmple();
+        }
+
+        private void btbGuardarEmpleado_Click(object sender, EventArgs e)
+        {
+            if (Editar == false)
+            {
+                try
+                {
+                    objetoCN.InsertarEmple(txtbNombre.Text, txtbApellido.Text, txtblegajo.Text, txtbcargo.Text, txtbtelefono.Text, txtbacceso.Text, txtbusuario.Text, txtbpassword.Text, txtbEmail.Text);
+                    MessageBox.Show("Operacion realizada correctamente", "La base de datos a sido modificada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MostrarEmpleados();
+                    LimpiarFromEmpleado();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se a conectado a la base de datos" + ex, "Error de sistemas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+            }
+            if (Editar == true)
+            {
+                try
+                {
+                    objetoCN.EditarEmple(idEmpleado, txtbNombre.Text, txtbApellido.Text, txtblegajo.Text, txtbcargo.Text, txtbtelefono.Text, txtbacceso.Text, txtbusuario.Text, txtbpassword.Text, txtbEmail.Text);
+                    MessageBox.Show("Operacion EDITAR realizada correctamente", "La base de datos a sido modificada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MostrarEmpleados();
+                    LimpiarFromEmpleado();
+                    Editar = false;
+
+
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se a conectado a la base de datos para EDITAR" + ex, "Error de sistemas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
+            }
+        }
+
+        private void btbEditar_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                Editar = true;
+                idEmpleado = dataGridView1.CurrentRow.Cells["idEmpleado"].Value.ToString();
+                txtbNombre.Text = dataGridView1.CurrentRow.Cells["nombre"].Value.ToString();
+                txtbApellido.Text = dataGridView1.CurrentRow.Cells["apellido"].Value.ToString();
+                txtblegajo.Text = dataGridView1.CurrentRow.Cells["legajo"].Value.ToString();
+                txtbcargo.Text = dataGridView1.CurrentRow.Cells["cargo"].Value.ToString();
+                txtbtelefono.Text = dataGridView1.CurrentRow.Cells["telefono"].Value.ToString();
+                txtbacceso.Text = dataGridView1.CurrentRow.Cells["acceso"].Value.ToString();
+                txtbusuario.Text = dataGridView1.CurrentRow.Cells["usuario"].Value.ToString();
+                txtbpassword.Text = dataGridView1.CurrentRow.Cells["password"].Value.ToString();
+                txtbpassword.Text = dataGridView1.CurrentRow.Cells["email"].Value.ToString();
+            }
+            else
+                MessageBox.Show("Seleccione una fila");
+        }
+
+        public void LimpiarFromEmpleado()
+        {
+            txtbNombre.Clear();
+            txtbApellido.Clear();
+            txtblegajo.Clear();
+            txtbcargo.Clear();
+            txtbtelefono.Clear();
+            txtbacceso.Clear();
+            txtbusuario.Clear();
+            txtbpassword.Clear();
+            txtbEmail.Clear();
+        }
+
+        private void btbEliminarEnpleado_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                idEmpleado = dataGridView1.CurrentRow.Cells["idEmpleado"].Value.ToString();
+                objetoCN.EliminarEmple(idEmpleado);
+                MessageBox.Show("Eliminado correctamente");
+                MostrarEmpleados();
+            }
+            else
+                MessageBox.Show("Seleccione una fila");
+        }
+    }
+}
