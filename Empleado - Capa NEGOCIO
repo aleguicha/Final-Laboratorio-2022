@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using CapaDatos;
+
+namespace CapaNegocio
+{
+    public class CN_Empleados
+    {
+        private CD_Empleados objetoCD = new CD_Empleados();
+
+        public DataTable MostrarEmple()
+        {
+            DataTable tabla = new DataTable();
+            tabla = objetoCD.Mostrar();
+            return tabla;
+        }
+
+        public void InsertarEmple(string nombre, string apellido, string legajo, string cargo, string telefono, string acceso, string usuario, string password, string email)
+        {
+            objetoCD.Insertar(nombre, apellido, Convert.ToInt32(legajo), cargo, telefono, acceso, usuario, password, email);  
+        }
+
+        public void EditarEmple(string idEmpleado, string nombre, string apellido, string legajo, string cargo, string telefono, string acceso, string usuario, string password, string email)
+        {
+            objetoCD.Editar(Convert.ToInt32(idEmpleado), nombre, apellido, Convert.ToInt32(legajo), cargo, telefono, acceso, usuario, password, email);
+
+        }
+
+        public void EliminarEmple(string idEmpleado)
+        {
+            objetoCD.Eliminar(Convert.ToInt32(idEmpleado));
+
+        }
+         
+    }
+}
